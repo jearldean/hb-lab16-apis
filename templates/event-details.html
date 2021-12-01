@@ -1,19 +1,12 @@
 {% extends 'base.html' %}
 
-{# TODO: Replace EVENT NAME with the event's name #}
-{% block title %}Event Details | {{ NAME }}}{% endblock %}
+{% block title %}Event Details | {{ NAME }} {% endblock %}
 
 {% block content %}
 <div class="container">
   <div class="row">
     <div class="col">
-      {# TODO: Replace EVENT NAME with the event's name #}
       <h2>{{ NAME }}</h2>
-
-      {#
-        TODO: Replace THIS PAGE IS FOR FURTHER STUDY with
-        event's description
-      #}
       <p>
         {{ DESCRIPTION }}
       </p>
@@ -22,17 +15,9 @@
 
   <div class="row">
     <div class="col col-md-4">
-      {#
-        TODO: Replace EVENT IMAGE URL with actual URL to one of the
-        event images
-      #}
       <img src="{{ PICS }}">
 
       <p>
-        {#
-          TODO: Replace EVENT TICKETMASTER URL with URL to event's
-          Ticketmaster page
-        #}
         <a href="{{ TIX }}" target="_blank">
           Go to Ticketmaster page
         </a>
@@ -41,17 +26,10 @@
 
     <div class="col">
       <h3>Start date</h3>
-      {# TODO: Replace EVENT START DATE with event's start date #}
       <p>{{ START }}</p>
 
       <h3>Venues</h3>
       <ul>
-        {#
-          TODO: Remove placeholder <li> tag & loop over all event venues to
-          generate an `li` element for each venue.
-
-          Each `li` should contain the name of a venue.
-        #}
         {% for item in VENUES %}
         <li>
           {{ item }}
@@ -61,12 +39,6 @@
 
       <h3>Classifications</h3>
       <ul>
-        {#
-          TODO: Remove placeholder <li> tag & loop over all event
-          classifications to generate an `li` element for each classification.
-
-          Each `li` should contain the name of the classification's *genre*.
-        #}
         {% for item in CLASS %}
         <li>
           {{ item }}

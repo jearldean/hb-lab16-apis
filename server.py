@@ -90,33 +90,33 @@ def get_event_details(id):
 
     res = requests.get(url, params=payload)
     data = res.json()
-    pprint(data)
-    
+    # pprint(data)
     
     event_name = data['_embedded']['events'][0]['name']
-    if 'description' in data['_embedded']['events'][0]:
-        event_description = data['_embedded']['events'][0]['description']
-    else:
-        event_description = ""
+    event_description = data['_embedded']['events'][0].get('description', "")
+    start = data['_embedded']['events'][0]['dates']['start'].get('localDate', "")
+    tickets = data['_embedded']['events'][0]['url']
 
-    venues = ['1', '2', '3']
-    #picture = data['_embedded']['events'][0]['images'][0]['url']    
     pictures = []
     for each_dict in data['_embedded']['events'][0]['images']:
         pictures.append(each_dict['url'])
     picture = choice(pictures)
-    tickets = data['_embedded']['events'][0]['url']
-    if 'dateTime' in data['_embedded']['events'][0]['dates']['start']:
-        start = data['_embedded']['events'][0]['dates']['start']['dateTime']
-    else:
-        start = ""
-    
-    class_ = data['_embedded']['events'][0]['classifications']
 
-    return render_template('event-details.html', NAME=event_name, DESCRIPTION=event_description, VENUES=venues, CLASS=class_, PICS=picture, TIX=tickets, START=start)
-    #else:
-    #        flash("Not a good record. Please try again.")
-    #        return render_template('search-form.html')
+    classifications = data['_embedded']['events'][0].get('classifications', None)
+    class_ = []
+    if classifications:
+        for ii in range(len(classifications)):
+            class_.append(classifications[ii]['genre']['name'])
+
+    venues = data['_embedded']['events'][0]['_embedded'].get('venues', None)
+    venues_ = []
+    if venues:
+        for jj in range(len(venues)):
+            venues_.append(venues[jj]['name'])
+
+
+    return render_template('event-details.html', NAME=event_name, DESCRIPTION=event_description, PICS=picture, TIX=tickets, START=start, VENUES=venues_, CLASS=class_)
+
 
 if __name__ == '__main__':
     app.debug = True
