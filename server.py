@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, flash
 
-from pprint import pformat
+from pprint import pformat, pprint
 import os
 import requests
-from pprint import pprint
 from random import choice
 
 
@@ -43,7 +42,7 @@ def find_afterparties():
     sort = request.args.get('sort', '')
 
     url = 'https://app.ticketmaster.com/discovery/v2/events'
-    payload = {'apikey': os.environ['TICKETMASTER_KEY']}
+    payload = {'apikey': API_KEY}
 
     #
     # - Use form data from the user to populate any search parameters
@@ -85,30 +84,30 @@ def find_afterparties():
 def get_event_details(id):
     """View the details of an event."""
 
-    url = 'https://app.ticketmaster.com/discovery/v2/events'
-    payload = {'apikey': os.environ['TICKETMASTER_KEY'], 'id': id}
-
+    url = f'https://app.ticketmaster.com/discovery/v2/events/{id}'
+    payload = {'apikey': API_KEY}
     res = requests.get(url, params=payload)
     data = res.json()
-    # pprint(data)
+    pprint(data)
     
-    event_name = data['_embedded']['events'][0]['name']
-    event_description = data['_embedded']['events'][0].get('description', "")
-    start = data['_embedded']['events'][0]['dates']['start'].get('localDate', "")
-    tickets = data['_embedded']['events'][0]['url']
+    event_name = data['name']
+    
+    event_description = data.get('info', "No description found.")
+    start = data['dates']['start'].get('localDate', "")
+    tickets = data['url']
 
     pictures = []
-    for each_dict in data['_embedded']['events'][0]['images']:
+    for each_dict in data['images']:
         pictures.append(each_dict['url'])
     picture = choice(pictures)
 
-    classifications = data['_embedded']['events'][0].get('classifications', None)
+    classifications = data['classifications']
     class_ = []
     if classifications:
         for ii in range(len(classifications)):
             class_.append(classifications[ii]['genre']['name'])
 
-    venues = data['_embedded']['events'][0]['_embedded'].get('venues', None)
+    venues = data['_embedded']['venues']
     venues_ = []
     if venues:
         for jj in range(len(venues)):
